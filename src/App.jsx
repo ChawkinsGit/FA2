@@ -3,21 +3,13 @@ import Graph from './components/graph'
 import Table from './components/Table';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css'
-const cloneData = (data) => JSON.parse(JSON.stringify(data));
+
 
 function App() {
   const [data, setData] = useState([]);
-
-  // visible graphed data (snapshot used for plotting)
   const [graphData, setGraphData] = useState([]);
-
-  // persistent snapshot used by Restore (does NOT get cleared by Reset)
   const [lastGraphedSnapshot, setLastGraphedSnapshot] = useState(null);
-
-  // saved graphs (array of {id, name, tableData})
   const [savedGraphs, setSavedGraphs] = useState([]);
-
-  // Save name UI
   const [isNaming, setIsNaming] = useState(false);
   const [graphName, setGraphName] = useState("");
 
@@ -48,12 +40,22 @@ function App() {
   // Save Graph button click -> show name input
   const handleSaveGraphClick = () => {
     if (!data || data.length === 0) return;
-    setIsNaming(true);
+    setIsNaming((prev) => !prev);
+
+    if(isNaming) {
+      setGraphName('')
+    }
   };
 
   // Confirm Save: saves a clone of current table data under provided name
   const handleConfirmSave = () => {
     if (!graphName.trim() || !data || data.length === 0) return;
+
+    if(savedGraphs.some((g) => g.name.toLowerCase() === graphName.trim().toLowerCase())) {
+      alert(`A saved graph has already been named "${graphName.trim()}." Please choose a different name.`)
+      return 
+    }
+
     const newEntry = {
       id: Date.now(),
       name: graphName.trim(),
