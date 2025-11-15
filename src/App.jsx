@@ -12,6 +12,8 @@ function App() {
   const [savedGraphs, setSavedGraphs] = useState([]);
   const [isNaming, setIsNaming] = useState(false);
   const [graphName, setGraphName] = useState("");
+  const [isEditingEntry, setIsEditingEntry] = useState(false);
+  const [editingEntryIndex, setEditingEntryIndex] = useState(null);
 
   // dropdown for saved entries
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -79,11 +81,32 @@ function App() {
   // Edit: load saved entry into table for editing (fresh clone)
   const handleEdit = (entry) => {
     const cloned = cloneData(entry.tableData);
+
+
     setData(cloned);
     setGraphData(cloned);
+    setIsEditingEntry(true);
+    setEditingEntryIndex(entry);
     // also update lastGraphedSnapshot so restore will go back to this if needed
     setLastGraphedSnapshot(cloned);
   };
+  
+  const handleSaveEditedEntry = () => {
+  if (editingEntryIndex === null) return;
+
+  const updated = [...savedGraphs];
+
+  updated[editingEntryIndex] = {
+    ...updated[editingEntryIndex],
+    data: structuredClone(data) // save edited table data
+  };
+
+  setSavedGraphs(updated);
+
+  // Done editing
+  setIsEditingEntry(false);
+  setEditingEntryIndex(null);
+};
 
   // Delete saved entry
   const handleDelete = (id) => {
@@ -190,6 +213,14 @@ function App() {
                     >
                       Edit
                     </button>
+                    {isEditingEntry && (
+                      <button
+                        className="btn btn-warning btn-lg ms-3"
+                        onClick={handleSaveEditedEntry}
+                      >
+                        Save Edits
+                      </button>
+                    )}
                     <button
                       className="btn btn-outline-danger btn-sm"
                       onClick={() => handleDelete(entry.id)}
