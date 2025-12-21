@@ -139,14 +139,9 @@ function App() {
     <div>
       {/* HEADER */}
       <header
-        className="bg-success text-white text-center p-3 rounded"
+        className="bg-success text-white text-center p-3 rounded mx-auto"
         style={{
-          position: "fixed",
-          top: 0,
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: "70%",
-          zIndex: 1000,
+          width: "70%" 
         }}
       >
         <h1>Trend Simulator</h1>
@@ -172,31 +167,47 @@ function App() {
       </div>
 
       {/* FOOTER BUTTONS */}
-      <div className="mt-4">
-        <div className="d-flex mb-3">
-          <button className="btn btn-primary btn-lg me-3" onClick={handleReset}>
+        <div className="mb-3"
+          style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(2, 1fr)",
+          gap: "1rem",
+          padding: "1rem",
+          width: "45vw",
+          minWidth: "280px",
+          maxWidth: "400px",
+          boxSizing: "border-box",
+        }}>
+          <button className="btn btn-primary btn-lg" onClick={handleReset}>
             Reset Data
           </button>
           <button className="btn btn-secondary btn-lg" onClick={handleRestore}>
             Restore Data
           </button>
+          
 
           {/* If currently editing, show Save Edits here as well (optional UX) */}
           {isEditingEntry && (
             <button
-              className="btn btn-warning btn-lg ms-3"
+              className="btn btn-warning btn-lg"
               onClick={handleSaveEditedEntry}
             >
               Save Edits
             </button>
+            
           )}
+
+          <button className="btn btn-success btn-lg" onClick={handleSaveGraphClick}>
+            {isNaming ? "Cancel Save" : "Save Graph"}
+          </button>
+          <button className="btn btn-danger btn-lg" onClick={toggleDropdown}>
+            {isDropdownOpen ? "Hide Entries" : "View Entries"}
+          </button>
         </div>
 
         {/* Save Graph Section */}
-        <div className="d-flex flex-column align-items-start">
-          <button className="btn btn-success btn-lg mb-2" onClick={handleSaveGraphClick}>
-            {isNaming ? "Cancel Save" : "Save Graph"}
-          </button>
+        
+          
 
           {isNaming && (
             <div className="d-flex mb-3 w-100">
@@ -214,9 +225,7 @@ function App() {
           )}
 
           {/* View Entries Button */}
-          <button className="btn btn-danger btn-lg" onClick={toggleDropdown}>
-            {isDropdownOpen ? "Hide Entries" : "View Entries"}
-          </button>
+          
 
           {/* DROPDOWN LIST */}
           {isDropdownOpen && savedGraphs.length > 0 && (
@@ -258,8 +267,7 @@ function App() {
           {isDropdownOpen && savedGraphs.length === 0 && (
             <div className="mt-3 text-muted">No saved entries yet.</div>
           )}
-        </div>
-      </div>
+
     </div>
 
   );
